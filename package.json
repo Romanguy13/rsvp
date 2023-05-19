@@ -1,0 +1,24 @@
+{
+  "name": "rsvp",
+  "version": "1.0.0",
+  "description": "Web3 RSVP application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Romanguy13/rsvp.git"
+  },
+  "keywords": [
+    "web3",
+    "solidity"
+  ],
+  "author": "Cody Lambert",
+  "license": "ISC",
+  "homepage": "https://github.com/Romanguy13/rsvp",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "hardhat": "^2.14.0"
+  }
+}
