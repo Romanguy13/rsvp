@@ -28,6 +28,8 @@ contract RSVP {
 
     mapping(bytes32 => CreateEvent) public idToEvent;
 
+    event NewRSVP(bytes32 eventID, address attendeeAddress);
+
     function createNewEvent(
         uint256 _eventTimestamp,
         uint256 _deposit,
@@ -78,5 +80,42 @@ contract RSVP {
             _maxCapacity,
             _eventDataCID
         );
+    }
+
+    function createNewRSVP(bytes32 eventId) external payable {
+        // look up event
+        CreateEvent storage myEvent = idToEvent[eventId];
+
+        // transfer deposit to our contract / require that they sent in enough ETH
+        require(
+            msg.value >= myEvent.deposit,
+            "You must send in enough ETH to cover the deposit"
+        );
+
+        // require that the event hasn't already happened (<eventTimestamp)
+        require(
+            block.timestamp < myEvent.eventTimestamp,
+            "This event has already happened"
+        );
+
+        // require that the event hasn't already reached max capacity
+        require(
+            myEvent.confirmedRSVPs.length < myEvent.maxCapacity,
+            "This event has reached max capacity"
+        );
+
+        // make sure that the user hasn't already RSVP'd
+        for (uint256 i = 0; i < myEvent.confirmedRSVPs.length; i++) {
+            require(
+                myEvent.confirmedRSVPs[i] != msg.sender,
+                "You have already RSVP'd to this event"
+            );
+        }
+
+        // add user to confirmedRSVPs array
+        myEvent.confirmedRSVPs.push(msg.sender);
+
+        // emit event
+        emit NewRSVP(eventId, msg.sender);
     }
 }
